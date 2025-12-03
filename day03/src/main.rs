@@ -29,15 +29,13 @@ fn main() {
 
   println!("{}", 
     input.lines().fold(0u64, |sum, line| {
-      let nums = line.chars().map(|c| c.to_digit(10).unwrap()).collect::<Vec<u32>>();
+      let nums = line
+        .chars()
+        .map(|c| c.to_digit(10).unwrap())
+        .collect::<Vec<u32>>();
       let len = nums.len();
-      let mut pos = if filename == "test" {
-        let pos: [usize; 12] = std::array::from_fn(|i| i+(15-12));
-        pos
-      } else {
-        let pos: [usize; 12] = std::array::from_fn(|i| i+(100-12));
-        pos
-      };
+      let mut pos: [usize; 12] = [0; 12];
+      pos.iter_mut().enumerate().for_each(|(i, n)| { *n = i + (len - 12) });
       let mut limit = 0;
       for p in pos.iter_mut() {
         let mut max = nums[*p];
