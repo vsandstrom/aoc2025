@@ -40,30 +40,28 @@ fn main() {
         .collect::<Vec<u64>>() // samla alla (2) värdena
         .chunks(2) // bunta ihop 2 och 2
         .for_each(|x| {
-          for num in x[0]..=x[1] { // för varje nummer i rangen
-            let mut temp = num;
-            let len  = num_len(&temp); // nummerlängden
-            let mut curr = vec!();
-            for i in 2..=len {
+          'outer: for num in x[0]..=x[1] { // för varje nummer i rangen
+            let len  = num_len(&num); // nummerlängden
+            'inner: for i in 2..=len {
+              let mut temp = num; // temp kopia
+              let mut curr = vec!(); // comparison vector
               while temp > 0 {
                 let n  = temp % u64::pow(10, len / i); // extrahera tal
-                curr.push(n);
-                temp /= u64::pow(10, len / i);
+                if num_len(&n) != len/i { continue 'inner; } // filtrera 'leading zeroes'
+                curr.push(n); // lägg till i vector för comparison
+                temp /= u64::pow(10, len / i); // decrement temp
               }
-              if curr.is_empty() { continue; }
-              if curr[1..].iter().all(|c| *c == curr[0] && *c > 0) {
-                println!("{curr:?}");
+              if curr.len() >= 2 && curr[1..].iter().all(|c| *c == curr[0]) { 
+                // if at least 2 och alla är samma siffra
                 sum += num;
-                break;
+                continue 'outer;
               } 
-              curr.clear();
             }
           }
         });
         sum
       })
   );
-
 }
 
 #[inline(always)]
