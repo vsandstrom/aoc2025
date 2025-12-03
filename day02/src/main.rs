@@ -23,9 +23,7 @@ fn main() {
               sum += num;
             }
           }
-
         });
-
       sum
     })
   );
