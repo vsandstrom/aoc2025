@@ -17,9 +17,9 @@ fn main() {
       .chunks(2) // bunta ihop 2 och 2
       .for_each(|x| { // iterera över paren
         for num in x[0]..=x[1] { // för varje nummer i rangen
-          let len = num_len(&num); // nummerlängden
-          let low = num % (u64::pow(10, len / 2)); // extrahera botten
-          let high = num / (u64::pow(10, len/2)); // extrahera toppen
+          let len  = num_len(&num); // nummerlängden
+          let low  = num % (u64::pow(10, len / 2)); // extrahera botten
+          let high = num / (u64::pow(10, len / 2)); // extrahera toppen
           if low == high { // jämför
             sum += num;
           }
