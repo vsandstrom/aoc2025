@@ -29,27 +29,30 @@ fn main() {
 
   println!("{}", 
     input.lines().fold(0u64, |sum, line| {
-      let nums = line
+      let nums = line // konvertera alla nummer till siffror
         .chars()
         .map(|c| c.to_digit(10).unwrap())
         .collect::<Vec<u32>>();
       let len = nums.len();
-      let mut pos: [usize; 12] = [0; 12];
-      pos.iter_mut().enumerate().for_each(|(i, n)| { *n = i + (len - 12) });
+      let mut pos: [usize; 12] = [0; 12]; // skapa en array av alla 12 positioner
+      pos.iter_mut() // starta med alla positioner i slutet av arrayen.
+        .enumerate()
+        .for_each(|(i, n)| { *n = i + (len - 12) });
       let mut limit = 0;
-      for p in pos.iter_mut() {
-        let mut max = nums[*p];
-        let mut idx = *p;
-        for i in (limit..*p).rev() {
-          if max <= nums[i] {
-            max = nums[i];
-            idx = i;
+      for p in pos.iter_mut() { // för varje position...
+        let mut max = nums[*p]; // sätt nuvarande nummer som max
+        let mut idx = *p; // spara nuvarande position
+        for i in (limit..*p).rev() { // stega baklänges
+          if max <= nums[i] { // leta efter större tal än nuvarande. 
+            max = nums[i]; // uppdatera ifall ny max funnen
+            idx = i; // spara index av nya max
           } 
         }
-        *p = idx;
-        limit = *p+1;
+        *p = idx; // spara slutgiltiga max
+        limit = *p+1; // uppdatera avgränsning.
       }
-      sum + pos.iter().fold(0u64, |prod, n| {prod*10 + nums[*n] as u64})
+      sum + pos.iter().fold(0u64, |prod, n| {prod*10 + nums[*n] as u64}) // konvertera ental till
+                                                                         // resultat
     })
   );
 }
