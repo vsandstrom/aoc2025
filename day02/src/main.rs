@@ -28,6 +28,42 @@ fn main() {
       sum
     })
   );
+
+
+  println!("{}",
+    input.split(",")
+      .fold(0u64, |mut sum, range| {
+      range
+        .trim() // trimma whitespace ifall det finns
+        .split("-") // splitta de två värdena
+        .map(|s| s.parse::<u64>().unwrap()) // konvertera till STOR int
+        .collect::<Vec<u64>>() // samla alla (2) värdena
+        .chunks(2) // bunta ihop 2 och 2
+        .for_each(|x| {
+          for num in x[0]..=x[1] { // för varje nummer i rangen
+            let mut temp = num;
+            let len  = num_len(&temp); // nummerlängden
+            let mut curr = vec!();
+            for i in 2..=len {
+              while temp > 0 {
+                let n  = temp % u64::pow(10, len / i); // extrahera tal
+                curr.push(n);
+                temp /= u64::pow(10, len / i);
+              }
+              if curr.is_empty() { continue; }
+              if curr[1..].iter().all(|c| *c == curr[0] && *c > 0) {
+                println!("{curr:?}");
+                sum += num;
+                break;
+              } 
+              curr.clear();
+            }
+          }
+        });
+        sum
+      })
+  );
+
 }
 
 #[inline(always)]
