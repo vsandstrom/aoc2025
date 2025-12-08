@@ -79,7 +79,7 @@ fn main() {
   println!("{}", ops.iter().enumerate().fold(0, |sum, (i, op)| {
     sum + match *op {
       "*" => { 
-        if nums[i].last() == Some(&0) {
+        if nums[i].last() == Some(&0) { 
           nums[i][..nums[i].len()-1].iter().product::<u64>()
         } else {
           nums[i].iter().product::<u64>()
