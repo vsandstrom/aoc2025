@@ -13,11 +13,12 @@ fn main() {
 
   let len = input.lines().next().unwrap().len();
   let mut start = vec![false; len];
+  let mut start_i = 0;
   let bp = input.lines().fold(vec!(), |mut arr, l| {
     let mut bps = vec![false; len];
     l.chars().enumerate().for_each(|(j, c)| {
       match c {
-        'S' => {start[j] = true},
+        'S' => {start[j] = true; start_i = j;},
         '^' => {bps[j] = true},
         '.' => (),
         _ => unreachable!()
@@ -43,5 +44,25 @@ fn main() {
       start = temp;
       sum
     })
-  )
+  );
+
+  let mut start = vec![(0, false); len];
+  start[start_i]=(1, true);
+  
+  bp.iter().for_each(|row| {
+    let mut temp = vec![(0, false); len];
+    start.iter().enumerate().for_each(|(i, (n, beam))| {
+      if row[i] && *beam {
+        if let Some(val) = temp.get_mut(i-1) { *val = (n + 1, true);}
+        if let Some(val) = temp.get_mut(i+1) { *val = (n + 1, true);}
+        if n - 1 == 0 {
+          temp[i] = (0, false);
+        } else {
+          temp[i] = (n-1, *beam);
+        }
+      } else if *beam { temp[i] = (*n, *beam); }
+    });
+    start = temp;
+  });
+  println!("{}", start.iter().fold(0, |sum, item| sum + item.0));
 }
